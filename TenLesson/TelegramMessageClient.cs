@@ -56,7 +56,7 @@ namespace TenLesson
 
             string json = JsonConvert.SerializeObject(msglog);
 
-            File.WriteAllText(e.Message.Chat.Id+".json", json);
+            File.AppendAllText(e.Message.Chat.Id+".json", json);
 
 
             w.Dispatcher.Invoke(() =>
