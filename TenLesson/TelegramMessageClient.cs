@@ -22,7 +22,7 @@ namespace TenLesson
         public static TelegramBotClient bot;
         public ObservableCollection<MessageLog> BotMessageLog { get; set; }
 
-        public TelegramMessageClient(MainWindow W, string PathToken = @"D:\ Work\SkillBox\token")
+        public TelegramMessageClient(MainWindow W)
         {
 
             this.BotMessageLog = new ObservableCollection<MessageLog>();
