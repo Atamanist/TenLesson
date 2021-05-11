@@ -37,7 +37,7 @@
                   HorizontalAlignment="Center" 
                   Margin="0,5,0,0" Width="390" Height="150" VerticalAlignment="Top" 
                   >
-            <StackPanel>
+            <StackPanel x:Name="SendPanel">
                 <TextBlock x:Name="TargetSend" 
                            Text="{Binding ElementName=logList, Path=SelectedItem.Id}"
                            Visibility="Visible"
@@ -55,7 +55,7 @@
                   HorizontalAlignment="Center" 
                   Margin="0,5,0,0" Width="390" Height="150" VerticalAlignment="Center" 
                   >
-            <StackPanel>
+            <StackPanel x:Name="TokkenPanel">
                 <TextBlock x:Name="TargetTokkenPatch" 
                            Text="{Binding ElementName=logList, Path=SelectedItem.Id}"
                            Visibility="Visible"
@@ -73,7 +73,7 @@
                   HorizontalAlignment="Center" 
                   Margin="0,5,0,0" Width="390" Height="150" VerticalAlignment="Bottom" 
                   >
-            <StackPanel>
+            <StackPanel x:Name="FilesPanel">
                 <TextBlock x:Name="TargetFilesPatch" 
                            Text="{Binding ElementName=logList, Path=SelectedItem.Id}"
                            Visibility="Visible"

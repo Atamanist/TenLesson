@@ -20,48 +20,53 @@ namespace TenLesson
     /// </summary>
     public partial class MainWindow : Window
     {
-            TelegramMessageClient client;
+            
+        TelegramMessageClient client;
 
-            public MainWindow()
-            {
-                InitializeComponent();
-
-                client = new TelegramMessageClient(this);
-
-                logList.ItemsSource = client.BotMessageLog;
-            }
-
-            private void btnMsgSendClick(object sender, RoutedEventArgs e)
-            {
-                client.SendMessage(txtMsgSend.Text, TargetSend.Text);
-            }
-
-        private void btnTokkenPatchSendClick()
+           
+        public MainWindow()
+           
         {
-            static TelegramBotClient ShowTokken()
-            {
-                bool r = true;
-                string ptoken;
-                while (r)
+            InitializeComponent();
+            //logList.ItemsSource = client.BotMessageLog;
+            SendPanel.Visibility = Visibility.Collapsed;
+            FilesPanel.Visibility = Visibility.Collapsed;
+        }
+
+         
+        private void btnMsgSendClick(object sender, RoutedEventArgs e)
+        {
+            client.SendMessage(txtMsgSend.Text, TargetSend.Text);
+        }
+
+        private void btnTokkenPatchSendClick(object sender, RoutedEventArgs e)
+        {
+                try
                 {
-                    Console.WriteLine("Path tokken:");
-                    ptoken = txtTokkenPatchSend.Text;
-                    //ptoken = @$"tekken.txt";
-                    try
-                    {
-
-                        bot = new TelegramBotClient(File.ReadAllText(ptoken));
-
-                        r = false;
-                    }
-                    catch
-                    {
-                        Console.WriteLine("Wrong path or tokken");
-                    }
-
+                    client = new TelegramMessageClient(this, txtTokkenPatchSend.Text);
                 }
-                return (bot);
+                catch
+                {
+                    TargetTokkenPatch.Text = "Wrong path or tokken";
+                }
+        }
 
+        private void btnFilesPatchSendClick(object sender, RoutedEventArgs e)
+        {
+            bool r = true;
+            while (r)
+            {
+                try
+                {
+
+                    client = new TelegramMessageClient(this, txtTokkenPatchSend.Text);
+
+                    r = false;
+                }
+                catch
+                {
+                    TargetTokkenPatch.Text = "Wrong path or tokken";
+                }
             }
 
         }

@@ -204,7 +204,7 @@ namespace TenLesson
             while (r)
             {
                 Console.WriteLine("Path tokken:");
-                ptoken = ;
+                ptoken = "";
                 
                 //ptoken = @$"tekken.txt";
                 try
