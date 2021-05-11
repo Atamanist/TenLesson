@@ -28,47 +28,51 @@ namespace TenLesson
            
         {
             InitializeComponent();
-            //logList.ItemsSource = client.BotMessageLog;
-            SendPanel.Visibility = Visibility.Collapsed;
-            FilesPanel.Visibility = Visibility.Collapsed;
+            client = new TelegramMessageClient(this);
+            logList.ItemsSource = client.BotMessageLog;
+            MsgBox.Visibility = Visibility.Collapsed;
+            FilesBox.Visibility = Visibility.Collapsed;
         }
 
          
         private void btnMsgSendClick(object sender, RoutedEventArgs e)
         {
-            client.SendMessage(txtMsgSend.Text, TargetSend.Text);
+            try
+            {
+                client.SendMessage(txtMsgSend.Text, TargetSend.Text);
+            }
+            catch
+            {
+            }
         }
 
         private void btnTokkenPatchSendClick(object sender, RoutedEventArgs e)
         {
-                try
-                {
-                    client = new TelegramMessageClient(this, txtTokkenPatchSend.Text);
-                }
-                catch
-                {
-                    TargetTokkenPatch.Text = "Wrong path or tokken";
-                }
+            if(client.ShowTokken(txtTokkenPatchSend.Text))
+            {
+                TargetTokkenPatch.Text = "Done";
+                TokkenBox.Visibility = Visibility.Collapsed;
+                FilesBox.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                TargetTokkenPatch.Text = "Не правильно задан путь или токкен";
+            }
         }
 
         private void btnFilesPatchSendClick(object sender, RoutedEventArgs e)
         {
-            bool r = true;
-            while (r)
+            if (client.ShowDaWay(txtFilesPatchSend.Text))
             {
-                try
-                {
-
-                    client = new TelegramMessageClient(this, txtTokkenPatchSend.Text);
-
-                    r = false;
-                }
-                catch
-                {
-                    TargetTokkenPatch.Text = "Wrong path or tokken";
-                }
+                TargetFilesPatch.Text = "Done";
+                FilesBox.Visibility = Visibility.Collapsed;
+                MsgBox.Visibility = Visibility.Visible;
+                client.BotStart();
             }
-
+            else
+            {
+                TargetFilesPatch.Text = "Не правильно задан путь";
+            }
         }
     }
 }

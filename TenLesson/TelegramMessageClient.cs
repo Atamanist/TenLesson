@@ -8,6 +8,7 @@ using System.Text;
 using System.Xml.Linq;
 using Telegram.Bot.Types.InputFiles;
 using Telegram.Bot.Types.ReplyMarkups;
+using Newtonsoft.Json;
 
 namespace TenLesson
 {
@@ -18,7 +19,7 @@ namespace TenLesson
 
         private MainWindow w;
 
-        static TelegramBotClient bot;
+        public static TelegramBotClient bot;
         public ObservableCollection<MessageLog> BotMessageLog { get; set; }
 
         public TelegramMessageClient(MainWindow W, string PathToken = @"D:\ Work\SkillBox\token")
@@ -27,29 +28,42 @@ namespace TenLesson
             this.BotMessageLog = new ObservableCollection<MessageLog>();
             this.w = W;
 
-            ShowTokken();
-            pathline = ShowDaWay();
-            Console.WriteLine("Bot start");
-
-
+        }
+        public void BotStart()
+        {
             bot.OnMessage += MessageListener;
             bot.OnCallbackQuery += Bot_OnCallbackQuery;
-            
+
             bot.StartReceiving();
+
         }
 
 
 
-        private static void MessageListener(object sender, Telegram.Bot.Args.MessageEventArgs e)
+        private void MessageListener(object sender, Telegram.Bot.Args.MessageEventArgs e)
         {
             DirectoryInfo directoryInfo = new DirectoryInfo(pathline);  // Получаем информацию о текущем каталоге
             string text = $"{DateTime.Now.ToLongTimeString()}: {e.Message.Chat.FirstName} {e.Message.Chat.Id} {e.Message.Text}";
             string g = "gimme+";
             string s = "send+";
             string c = "current+";
-            Console.WriteLine($"{text} TypeMessage: {e.Message.Type.ToString()}");
-            
-            
+
+            if (e.Message.Text == null) return;
+
+            var messageText = e.Message.Text;
+            MessageLog msglog= new MessageLog(
+                    DateTime.Now.ToLongTimeString(), messageText, e.Message.Chat.FirstName, e.Message.Chat.Id);
+
+            string json = JsonConvert.SerializeObject(msglog);
+
+            File.WriteAllText(e.Message.Chat.Id+".json", json);
+
+
+            w.Dispatcher.Invoke(() =>
+            {
+                BotMessageLog.Add(msglog);
+            });
+
             if (e.Message.Type == Telegram.Bot.Types.Enums.MessageType.Document)
             {
                 Console.WriteLine(e.Message.Document.FileId);
@@ -197,64 +211,51 @@ namespace TenLesson
         /// Проверка пути к токену в формате тхт и возврат бота
         /// </summary>
         /// <returns></returns>
-        static TelegramBotClient ShowTokken()
+        public bool ShowTokken(string ptoken)
         {
-            bool r = true;
-            string ptoken;
-            while (r)
-            {
-                Console.WriteLine("Path tokken:");
-                ptoken = "";
-                
-                //ptoken = @$"tekken.txt";
+            bool r ;
                 try
                 {
 
                     bot = new TelegramBotClient(File.ReadAllText(ptoken));
 
-                    r = false;
+                    r = true;
                 }
                 catch
                 {
-                    Console.WriteLine("Wrong path or tokken");
+                r = false;
                 }
-
-            }
-            return (bot);
+            return r;
 
         }
+
+
 
         /// <summary>
         /// Проверка пути к папке для сохранения выгрузки
         /// </summary>
         /// <returns></returns>
-        static string ShowDaWay()
+        public bool ShowDaWay(string pfolder)
         {
-            bool r = false;
-            string pfolder = "";
-            while (r == false)
+            bool r;
+            try
             {
-                Console.WriteLine("Path folder aka cloud:");
-                pfolder = Console.ReadLine();
-                //pfolder = @$"E:\BotFiles";
-                try
+                DirectoryInfo directoryInfo = new DirectoryInfo(pfolder);
+                if (directoryInfo.Exists)
                 {
-                    DirectoryInfo directoryInfo = new DirectoryInfo(pfolder);
-                    if (r = directoryInfo.Exists)
-                    {
-                        break;
-                    }
-
+                    r = true;
+                    pathline = pfolder;
                 }
-                catch
+                else
                 {
-                    Console.WriteLine("Wrong path");
+                    r = false;
                 }
-
-
             }
-            return (pfolder);
-
+            catch
+            {
+                r = false;
+            }
+            return r;
         }
 
         public void SendMessage(string Text, string Id)

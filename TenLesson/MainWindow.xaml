@@ -31,7 +31,8 @@
             </ListBox.ItemTemplate>
         </ListBox>
 
-        <GroupBox Grid.Column="1" 
+        <GroupBox x:Name="MsgBox" 
+                  Grid.Column="1" 
                   FontSize="20"
                   Header="Отправка сообщения"
                   HorizontalAlignment="Center" 
@@ -49,7 +50,8 @@
             </StackPanel>
         </GroupBox>
         
-        <GroupBox Grid.Column="1" 
+        <GroupBox x:Name="TokkenBox"
+                  Grid.Column="1" 
                   FontSize="20"
                   Header="Отправка токкена"
                   HorizontalAlignment="Center" 
@@ -67,7 +69,8 @@
             </StackPanel>
         </GroupBox>
 
-        <GroupBox Grid.Column="1" 
+        <GroupBox x:Name="FilesBox"
+                  Grid.Column="1" 
                   FontSize="20"
                   Header="Отправка пути файлов"
                   HorizontalAlignment="Center" 
