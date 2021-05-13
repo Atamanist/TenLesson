@@ -9,6 +9,7 @@ using System.Xml.Linq;
 using Telegram.Bot.Types.InputFiles;
 using Telegram.Bot.Types.ReplyMarkups;
 using Newtonsoft.Json;
+using Microsoft.Win32;
 
 namespace TenLesson
 {
@@ -48,11 +49,9 @@ namespace TenLesson
             string s = "send+";
             string c = "current+";
 
-            if (e.Message.Text == null) return;
-
             var messageText = e.Message.Text;
             MessageLog msglog= new MessageLog(
-                    DateTime.Now.ToLongTimeString(), messageText, e.Message.Chat.FirstName, e.Message.Chat.Id);
+                    DateTime.Now.ToLongTimeString(), messageText, e.Message.Chat.FirstName, e.Message.Chat.Id,e.Message.Chat.Type.ToString());
 
             string json = JsonConvert.SerializeObject(msglog);
 
@@ -64,14 +63,23 @@ namespace TenLesson
                 BotMessageLog.Add(msglog);
             });
 
-            if (e.Message.Type == Telegram.Bot.Types.Enums.MessageType.Document)
-            {
-                Console.WriteLine(e.Message.Document.FileId);
-                Console.WriteLine(e.Message.Document.FileName);
-                Console.WriteLine(e.Message.Document.FileSize);
+            //if (e.Message.Type == Telegram.Bot.Types.Enums.MessageType.Document)
+            //{
+            //    Console.WriteLine(e.Message.Document.FileId);
+            //    Console.WriteLine(e.Message.Document.FileName);
+            //    Console.WriteLine(e.Message.Document.FileSize);
 
+            //    DownLoad(e.Message.Document.FileId, e.Message.Document.FileName);
+            //}
+
+            if (e.Message.Type != Telegram.Bot.Types.Enums.MessageType.Text)
+            {
+
+                DownLoad(e.Message.Photo.);
                 DownLoad(e.Message.Document.FileId, e.Message.Document.FileName);
+
             }
+
 
             if (e.Message.Text != null)
             {
@@ -119,7 +127,7 @@ namespace TenLesson
         static async void DownLoad(string fileId, string path)
         {
             var file = await bot.GetFileAsync(fileId);
-            FileStream fs = new FileStream(@$"{pathline}{path}", FileMode.Create);
+            FileStream fs = new FileStream(@$"{pathline}\{path}", FileMode.Create);
             await bot.DownloadFileAsync(file.FilePath, fs);
             fs.Close();
 
@@ -214,19 +222,25 @@ namespace TenLesson
         public bool ShowTokken(string ptoken)
         {
             bool r ;
+                
+            try
+            {
+                bot = new TelegramBotClient(File.ReadAllText(ptoken));
+                r = true;
+            }
+            catch
+            {
                 try
                 {
-
-                    bot = new TelegramBotClient(File.ReadAllText(ptoken));
-
+                    bot = new TelegramBotClient(ptoken);
                     r = true;
                 }
                 catch
                 {
-                r = false;
+                    r = false;
                 }
+            }
             return r;
-
         }
 
 

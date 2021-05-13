@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Forms;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
@@ -48,7 +49,7 @@ namespace TenLesson
 
         private void btnTokkenPatchSendClick(object sender, RoutedEventArgs e)
         {
-            if(client.ShowTokken(txtTokkenPatchSend.Text))
+            if (client.ShowTokken(txtTokkenPatchSend.Text))
             {
                 TargetTokkenPatch.Text = "Done";
                 TokkenBox.Visibility = Visibility.Collapsed;
@@ -62,17 +63,13 @@ namespace TenLesson
 
         private void btnFilesPatchSendClick(object sender, RoutedEventArgs e)
         {
-            if (client.ShowDaWay(txtFilesPatchSend.Text))
-            {
-                TargetFilesPatch.Text = "Done";
-                FilesBox.Visibility = Visibility.Collapsed;
-                MsgBox.Visibility = Visibility.Visible;
-                client.BotStart();
-            }
-            else
-            {
-                TargetFilesPatch.Text = "Не правильно задан путь";
-            }
+
+            var dialogfolder = new FolderBrowserDialog();
+            dialogfolder.ShowDialog();
+            client.ShowDaWay(dialogfolder.SelectedPath);
+            FilesBox.Visibility = Visibility.Collapsed;
+            MsgBox.Visibility = Visibility.Visible;
+            client.BotStart();
         }
     }
 }

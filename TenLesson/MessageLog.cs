@@ -12,14 +12,17 @@ namespace TenLesson
 
         public string Msg { get; set; }
 
+        public string Type { get; set; }
+
         public string FirstName { get; set; }
 
-        public MessageLog(string Time, string Msg, string FirstName, long Id)
+        public MessageLog(string Time, string Msg, string FirstName, long Id,string type)
         {
             this.Time = Time;
             this.Msg = Msg;
             this.FirstName = FirstName;
             this.Id = Id;
+            this.Type = type;
         }
 
     }
