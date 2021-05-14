@@ -50,12 +50,13 @@ namespace TenLesson
             string c = "current+";
 
             var messageText = e.Message.Text;
-            MessageLog msglog= new MessageLog(
-                    DateTime.Now.ToLongTimeString(), messageText, e.Message.Chat.FirstName, e.Message.Chat.Id,e.Message.Chat.Type.ToString());
+            MessageLog msglog = new MessageLog(
+                    DateTime.Now.ToLongTimeString(), messageText, e.Message.Chat.FirstName, e.Message.Chat.Id, e.Message.Type.ToString());
+
 
             string json = JsonConvert.SerializeObject(msglog);
 
-            File.AppendAllText(e.Message.Chat.Id+".json", json);
+            File.AppendAllText($@"{pathline}\{e.Message.Chat.Id}.json", $"\n{json}");
 
 
             w.Dispatcher.Invoke(() =>
@@ -63,21 +64,14 @@ namespace TenLesson
                 BotMessageLog.Add(msglog);
             });
 
-            //if (e.Message.Type == Telegram.Bot.Types.Enums.MessageType.Document)
-            //{
-            //    Console.WriteLine(e.Message.Document.FileId);
-            //    Console.WriteLine(e.Message.Document.FileName);
-            //    Console.WriteLine(e.Message.Document.FileSize);
-
-            //    DownLoad(e.Message.Document.FileId, e.Message.Document.FileName);
-            //}
-
-            if (e.Message.Type != Telegram.Bot.Types.Enums.MessageType.Text)
+            if (e.Message.Type == Telegram.Bot.Types.Enums.MessageType.Document)
             {
-
-                DownLoad(e.Message.Photo.);
                 DownLoad(e.Message.Document.FileId, e.Message.Document.FileName);
+            }
 
+            if (e.Message.Type == Telegram.Bot.Types.Enums.MessageType.Photo)
+            {
+                DownLoad(e.Message.Photo[e.Message.Photo.Length - 1].FileId, e.Message.Photo[e.Message.Photo.Length - 1].FileUniqueId+".jpeg");
             }
 
 

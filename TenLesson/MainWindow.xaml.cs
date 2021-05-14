@@ -45,11 +45,13 @@ namespace TenLesson
             catch
             {
             }
+            txtMsgSend.Text = "";
         }
 
         private void btnTokkenPatchSendClick(object sender, RoutedEventArgs e)
         {
             if (client.ShowTokken(txtTokkenPatchSend.Text))
+
             {
                 TargetTokkenPatch.Text = "Done";
                 TokkenBox.Visibility = Visibility.Collapsed;
